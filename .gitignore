@@ -103,6 +103,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+CloudVenv/
 .env
 .venv
 env/
@@ -140,3 +141,5 @@ server/djangoapp/migrations/
 *.pyc
 server/djangoapp/migrations/
 
+# Database
+*.sqlite3
