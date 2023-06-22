@@ -27,7 +27,11 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "djangoapp.140c9gyblznl.us-east.codeengine.appdomain.cloud",
+]
 
 
 # Application definition
