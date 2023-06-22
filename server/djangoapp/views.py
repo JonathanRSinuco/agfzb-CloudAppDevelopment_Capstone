@@ -79,6 +79,7 @@ def registration_request(request):
                 last_name=last_name,
                 password=password,
             )
+            print("")
             login(request, user)
             return redirect("djangoapp:index")
         else:
