@@ -71,7 +71,7 @@ def registration_request(request):
             User.objects.get(username=username)
             user_exist = True
         except:
-            return render(request, "djangoapp/registration.html", context)
+            pass
         if not user_exist:
             user = User.objects.create_user(
                 username=username,
