@@ -1,7 +1,7 @@
 import requests
 import json
 
-from .models import CarDealer
+# from .models import CarDealer
 from requests.auth import HTTPBasicAuth
 
 
@@ -45,7 +45,7 @@ def get_dealers_from_cf(url, **kwargs):
             # Get its content in `doc` object
             dealer_doc = dealer["doc"]
             # Create a CarDealer object with values in `doc` object
-            dealer_obj = CarDealer(
+            """dealer_obj = CarDealer(
                 address=dealer_doc["address"],
                 city=dealer_doc["city"],
                 full_name=dealer_doc["full_name"],
@@ -55,7 +55,8 @@ def get_dealers_from_cf(url, **kwargs):
                 short_name=dealer_doc["short_name"],
                 st=dealer_doc["st"],
                 zip=dealer_doc["zip"],
-            )
+            )"""
+            dealer_obj = {}  # Borrar cuando se cree CarDealer
             results.append(dealer_obj)
 
     return results

@@ -13,8 +13,9 @@ urlpatterns = [
     # path for contact us view
     path(route="contact/", view=views.contact, name="contact"),
     # path for registration
-    path(route="login/", view=views.login, name="login"),
+    path(route="login/", view=views.login_request, name="login"),
     path(route="logout/", view=views.logout_request, name="logout"),
+    path(route="registration/", view=views.registration_request, name="signup"),
     path(route="", view=views.get_dealerships, name="index"),
     # path for dealer reviews view
     # path for add a review view

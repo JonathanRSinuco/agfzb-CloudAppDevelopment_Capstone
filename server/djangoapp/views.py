@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 
 # from .models import related models
 from .restapis import get_dealers_from_cf
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from datetime import datetime
 import logging
@@ -31,7 +31,7 @@ def contact(request):
 
 
 # Create a `login_request` view to handle sign in request
-def login(request):
+def login_request(request):
     context = {}
     # Handles POST request
     if request.method == "POST":
@@ -39,7 +39,7 @@ def login(request):
         username = request.POST["username"]
         password = request.POST["password"]
         # Try to check if provide credential can be authenticated
-        user = authenticate(username=username, password=password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             # If user is valid, call login method to login current user
             login(request, user)
@@ -71,7 +71,7 @@ def registration_request(request):
             User.objects.get(username=username)
             user_exist = True
         except:
-            logger.debug("{} is new user".format(username))
+            return render(request, "djangoapp/registration.html", context)
         if not user_exist:
             user = User.objects.create_user(
                 username=username,
@@ -79,14 +79,13 @@ def registration_request(request):
                 last_name=last_name,
                 password=password,
             )
-            print("")
             login(request, user)
             return redirect("djangoapp:index")
         else:
             return render(request, "djangoapp/registration.html", context)
 
 
-def get_dealerships(request):
+def get_dealerships_(request):
     if request.method == "GET":
         url = "https://us-east.functions.appdomain.cloud/api/v1/web/ace6007a-dafc-4d8a-8584-ae89752db342/dealership-package/dealership-list"
         # Get dealers from the URL
@@ -95,6 +94,12 @@ def get_dealerships(request):
         dealer_names = " ".join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
         return HttpResponse(dealer_names)
+
+
+def get_dealerships(request):
+    context = {}
+    if request.method == "GET":
+        return render(request, "djangoapp/index.html", context)
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
