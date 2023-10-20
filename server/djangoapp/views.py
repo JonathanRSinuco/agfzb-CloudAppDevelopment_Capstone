@@ -8,8 +8,10 @@ from .restapis import (
     get_dealers_from_cf,
     get_dealer_by_id_from_cf,
     get_dealer_reviews_from_cf,
+    post_request,
 )
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from datetime import datetime
 import logging
@@ -123,5 +125,24 @@ def get_dealer_details(request, dealer_id=None):
 
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+@login_required
+def add_review(request, dealer_id):
+    if request.method == "POST":
+        review_data = request.POST.get("review", "")
+        purchase_data = request.POST.get("purchase", False)
+
+        review = dict()
+        review["time"] = datetime.utcnow().isoformat()
+        review["name"] = request.user.username
+        review["dealership"] = dealer_id
+        review["review"] = review_data
+        review["purchase"] = bool(purchase_data)
+
+        json_payload = dict()
+        json_payload["review"] = review
+
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/adcdf2ed-53dd-4e00-af0e-683561df3afe/dealership-package/add_review"
+
+        add_review = post_request(url, json_payload)
+
+        return HttpResponse(add_review)
