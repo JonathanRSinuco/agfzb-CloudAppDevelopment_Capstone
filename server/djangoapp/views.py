@@ -99,7 +99,9 @@ def get_dealerships(request):
         # Concat all dealer's short name
         dealer_names = " ".join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
-        return HttpResponse(dealer_names)
+        context = dict()
+        context["dealership_list"] = dealerships
+        return render(request, "djangoapp/index.html", context)
 
 
 def get_dealerships_(request):
@@ -120,16 +122,19 @@ def get_dealer_details(request, dealer_id=None):
             {"review": review.review, "sentiment": review.sentiment}
             for review in reviews_response
         ]
-        # Return a list of dealer short name
-        return HttpResponse(reviews)
+        context = dict()
+        context["reviews_response"] = reviews_response
+        return render(request, "djangoapp/dealer_details.html", context)
 
 
 # Create a `add_review` view to submit a review
 @login_required
-def add_review(request, dealer_id):
+def add_review(request, dealer_i=None):
+    context = {}
     if request.method == "POST":
-        review_data = request.POST.get("review", "")
-        purchase_data = request.POST.get("purchase", False)
+        data = json.loads(request.body)
+        review_data = data.get("review", "")
+        purchase_data = data.get("purchase", False)
 
         review = dict()
         review["time"] = datetime.utcnow().isoformat()
@@ -145,4 +150,5 @@ def add_review(request, dealer_id):
 
         add_review = post_request(url, json_payload)
 
-        return HttpResponse(add_review)
+        return render(request, "djangoapp/add_review.html", context)
+    return render(request, "djangoapp/add_review.html", context)

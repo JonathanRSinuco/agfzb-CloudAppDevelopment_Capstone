@@ -129,8 +129,7 @@ def get_dealer_reviews_from_cf(url, dealerId=None):
         reviews = json_result["rows"]
         # For each dealer object
         for review in reviews:
-            review = review["doc"]
-            print(review)
+            review = review.get("doc", review)
             # Create a CarDealer object with values
             review_obj = DealerReview(
                 dealership=review.get("dealership"),

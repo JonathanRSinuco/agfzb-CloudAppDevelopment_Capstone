@@ -23,7 +23,7 @@
                 <div class="card col-12 py-5">
                     <div class="container">
                         <h2 class="mb-4 text-center">Please login</h2>
-                        <form method="post">
+                        <form method="post" action="{% url 'djangoapp:login' %}">
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="username">Username:</label>

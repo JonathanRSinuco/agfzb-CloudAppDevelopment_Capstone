@@ -27,6 +27,11 @@ urlpatterns = [
         route="review/<int:dealer_id>/",
         view=views.add_review,
         name="add_review",
+    ),
+    path(
+        route="review/",
+        view=views.add_review,
+        name="add_review",
     )
     # path for dealer reviews view
     # path for add a review view
