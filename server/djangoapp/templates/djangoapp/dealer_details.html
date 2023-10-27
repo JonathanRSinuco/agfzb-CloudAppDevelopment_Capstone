@@ -32,7 +32,12 @@
 
                 {% if user.is_authenticated %}
                 <li class="nav-item">
+                    {% if dealer_id %}
+                    <a type="button" href="{% url 'djangoapp:add_review' dealer_id %}" class="btn btn-link">Add
+                        Review</a>
+                    {% else %}
                     <a type="button" href="{% url 'djangoapp:add_review' %}" class="btn btn-link">Add Review</a>
+                    {% endif %}
                 </li>
                 <li class="nav-item">
                     <span class="navbar-text">{{user.username}}</span>
@@ -55,8 +60,8 @@
             </ul>
         </div>
     </nav>
-    <h4>Reviews fot Sub-Ex Car Dealership</h4>
     <div class="container">
+        <h4>Review</h4>
         <div class="card-columns">
             {% for review in reviews_response %}
             <div class="card">

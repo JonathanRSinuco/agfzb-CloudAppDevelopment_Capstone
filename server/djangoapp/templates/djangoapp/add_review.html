@@ -19,37 +19,46 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-6 d-flex offset-md-3 align-items-center justify-content-center align-items-center"
-                style="height: 100vh;">
-                <div class="card col-12 py-5">
-                    <div class="container">
-                        <h2 class="mb-4 text-center">Add Review</h2>
-                        <form method="post" action="{% url 'djangoapp:add_review' dealer_id %}">
+            <div class="card col-12 py-5">
+                <div class="container">
+                    <h2 class="mb-4 text-left">Add a review about Sub-Ex Car Dealership</h2>
+                    {% if dealer_id %}
+                    <form method="post" action="{% url 'djangoapp:add_review' dealer_id %}">
+                        {% else %}
+                        <form method="post" action="{% url 'djangoapp:add_review' %}">
+                            {% endif %}
                             {% csrf_token %}
                             <div class="form-group">
+                                <label for="content">Enter the review content</label>
                                 <textarea class="form-control" id="content" name="content" rows="2" required></textarea>
                             </div>
                             <div class="form-group">
-                                <input class="form-check-input" type="checkbox" name="purchasecheck" id="purchasecheck">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="purchasecheck"
+                                        id="purchasecheck">
+                                    <label class="form-check-label" for="purchasecheck">Has purchased the car from
+                                        Sub-Ex Car Dealership? <span style="font-size: 12px;">(Select purchased car
+                                            information below if checked)</span></label>
+                                </div>
                             </div>
                             <div class="form-group">
+                                <label for="car">Select your car (Model-make-year)</label>
                                 <select name="car" id="car" class="form-select" required>
                                     {% for car in cars %}
-                                    <option selected value={{car.id}}>{{car.name}}-{{car.make.name}}-{{
-                                        car.year|date:"Y" }}</option>
+                                    <option selected value={{car.id}}>
+                                        {{car.name}}-{{car.car_make}}-{{car.year|date:"Y"}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
+                                <label for="purchasedate">Select Your Purchase Date</label>
+                                <input class="date-own form-control" type="date" name="purchasedate" id="purchasedate">
                             </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block mt-4">Add Review</button>
-                    </form>
+                            <button type="submit" class="btn btn-primary btn-block mt-4">Submit</button>
+                        </form>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </body>
 <script type="text/javascript">

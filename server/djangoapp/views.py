@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 
 # from .models import related models
+from .models import CarMake, CarModel
 from .restapis import (
     get_dealers_from_cf,
     get_dealer_by_id_from_cf,
@@ -117,25 +118,17 @@ def get_dealer_details(request, dealer_id=None):
         # Get review from the URL
         reviews_response = get_dealer_reviews_from_cf(url, dealer_id)
 
-        # Concat all reviews
-        reviews = [
-            {"review": review.review, "sentiment": review.sentiment}
-            for review in reviews_response
-        ]
         context = dict()
         context["reviews_response"] = reviews_response
+        context["dealer_id"] = dealer_id
         return render(request, "djangoapp/dealer_details.html", context)
 
 
 # Create a `add_review` view to submit a review
 @login_required
-def add_review(request, dealer_i=None):
-    context = {}
+def add_review(request, dealer_id=None):
+    context = dict()
     if request.method == "POST":
-        data = json.loads(request.body)
-        review_data = data.get("review", "")
-        purchase_data = data.get("purchase", False)
-
         review = dict()
         review["time"] = datetime.utcnow().isoformat()
         review["name"] = request.user.username
@@ -143,12 +136,20 @@ def add_review(request, dealer_i=None):
         review["review"] = review_data
         review["purchase"] = bool(purchase_data)
 
+        car_id = request.POST.get("car")
+
         json_payload = dict()
-        json_payload["review"] = review
+        json_payload["review"] = {
+            "review": request.POST.get("content"),
+            "purchase": bool(request.POST.get("purchasecheck")),
+        }
 
         url = "https://us-south.functions.appdomain.cloud/api/v1/web/adcdf2ed-53dd-4e00-af0e-683561df3afe/dealership-package/add_review"
 
         add_review = post_request(url, json_payload)
 
         return render(request, "djangoapp/add_review.html", context)
+
+    context["cars"] = CarModel.objects.all()
+    context["dealer_id"] = dealer_id
     return render(request, "djangoapp/add_review.html", context)
